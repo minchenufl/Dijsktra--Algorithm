@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class ssp 
 { 
-  public static final double INFINITY = Double.POSITIVE_INFINITY;
+	public static final double INFINITY = Double.POSITIVE_INFINITY;
 	
 	public static void main(String[] args) throws FileNotFoundException
 	{
@@ -24,14 +24,21 @@ public class ssp
 		int n;
 	
 		if(args[0].equals("-r"))			//random mode
+		{
+			System.out.println("Random mode:");
 			randomMode();
+		}
 		
 		else
 		{
 			if(args.length == 1)		 	//the graph info is input by the user
+			{
+				System.out.println("Enter graph information:");
 				edges = inputEdges();	
+			}
 			else if(args.length ==2)		//the graph info is read from the designated file
 			{
+				System.out.println("Load graph information from the file...");
 				String filename = args[1];
 				edges = loadEdges(filename);
 			}
@@ -41,11 +48,20 @@ public class ssp
 			double[][] distVec = new double[n][n];
 			
 			if(args[0].equals("-is"))		//simple scheme
+			{	
+				System.out.println("Simple scheme:");
 				distVec = simpleScheme(g);
+			}
 			else if(args[0].equals("-if"))	//fibonacci heap scheme
+			{
+				System.out.println("Fibonacci heap scheme:");
 				distVec = fheapScheme(g);
+			}
 			else if(args[0].equals("-ib"))	//binomial heap scheme
+			{
+				System.out.println("Binomial heap scheme:");
 				distVec = bheapScheme(g);
+			}
 			
 			System.out.print("node \t");
 			for(int i=0; i<n; i++)
