@@ -88,7 +88,7 @@ public class ssp
 	 */
 	public static void randomMode()
 	{
-		int n; 								//number of node in graph
+		int n = 0; 								//number of node in graph
 		double density; 
 		Edge[] edges;
 		Edge tempEdge;
@@ -99,16 +99,18 @@ public class ssp
 		boolean isConnected = false;
 		double[] time = new double[3];
 		int percentage;
+		boolean duplicateEdge;
 		System.out.println("Number of vertices\t" + "Density\t\t" + "Simple scheme\t" + "F-heap scheme\t" + "B-heap scheme");
 		for(int i=100; i<=500; i = i + 100)
 			for(int j=1; j<=10; j++)
 			{
+				isConnected = false;
+				n = i;
+				density = j * 0.1;
+				numOfEdges = (int) (n * (n-1) * density);
+				edges = new Edge[numOfEdges];
 				while(!isConnected)			//execute the three schemes only when the graph is a connected
 				{
-					n = i;
-					density = j * 0.1;
-					numOfEdges = (int) (n * (n-1) * density);
-					edges = new Edge[numOfEdges];
 					currentNum = 0;
 					while(currentNum < numOfEdges)		//generate n*(n-1)*density edges
 					{
@@ -120,16 +122,24 @@ public class ssp
 						else
 						{
 							tempEdge = new Edge(start, end, gen.nextInt(1000) + 1);
+							duplicateEdge = false;
 							for(Edge e : edges)
 							{
-								if(tempEdge.equals(e))
-									continue;
+								if(tempEdge.equals(e))	//check whether the new generated edge already exists
+								{	
+									duplicateEdge = true;
+									break;
+								}
 							}
-							edges[currentNum] = tempEdge;
-							currentNum ++;
+							
+							if(duplicateEdge == false)
+							{
+								edges[currentNum] = tempEdge;
+								currentNum ++;
+							}
+
 						}
 					}
-					
 					g = buildGraph(edges, n);
 					isConnected = isConnected(g);		//test whether the generated graph is connected
 				}
@@ -147,7 +157,7 @@ public class ssp
 				time[2] = System.currentTimeMillis() - time[2];
 				
 				percentage = j * 10;
-				System.out.println(i + "\t\t\t" + percentage +"%\t\t" + time[0] + "\t\t" + time[1] + "\t\t" + time[2] );
+				System.out.println(n + "\t\t\t" + percentage +"%\t\t" + time[0] + "\t\t" + time[1] + "\t\t" + time[2] );
 			}
 	}
 	
