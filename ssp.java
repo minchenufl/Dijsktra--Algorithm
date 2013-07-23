@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 /**
- * This project uses Dijsktra's algorithm compute the shortest paths
+ * This project uses Dijsktra's algorithm to compute the shortest paths
  * to different nodes from a source. Three different schemes are implemented
  * to achieve the Dijsktra's algorithm. Every node in the directed graph can be the 
  * source. So we can obtain the shortest path between arbitrary pair of nodes
