@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * This class implements the nodes in the graph
  * @author Min Chen
@@ -5,16 +7,15 @@
  */
 public class Gnode 
 {
-  private int index;
-	private Adjnode[] adjNodes;				//create enough space for containing all possible adjacent nodes
-	private Adjnode[] actualAdjnodes;		//actual adjacent nodes 
+	private int index;
+	private ArrayList<Adjnode> adjNodes;		//list of adjacent nodes
 	private int neighborNumber = 0;
 	private boolean isPathFound;
 	
-	public Gnode(int index, int numberOfNodes)
+	public Gnode(int index)
 	{
 		this.index = index;
-		adjNodes = new Adjnode[numberOfNodes];
+		adjNodes = new ArrayList<Adjnode>();
 	}
 	
 	/**
@@ -24,21 +25,16 @@ public class Gnode
 	 */
 	public void insertNeighbor(int i, double d)
 	{
-			adjNodes[neighborNumber] = new Adjnode(i, d);
-			neighborNumber ++;
+		adjNodes.add(new Adjnode(i, d));
 	}
 	
 	/**
 	 * get this node's adjacent node
 	 * @return the adjacent node list
 	 */
-	public Adjnode[] getAdjnodes()
+	public ArrayList<Adjnode> getAdjnodes()
 	{
-		actualAdjnodes =  new Adjnode[neighborNumber];
-		for (int i=0; i<neighborNumber; i++)
-				actualAdjnodes[i] = adjNodes[i];
-
-		return actualAdjnodes;
+		return adjNodes;
 	}
 	
 	public int getIndex()
