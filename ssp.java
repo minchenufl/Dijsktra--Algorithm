@@ -396,7 +396,7 @@ public class ssp
 		Gnode[] gnodes = new Gnode[n];
 		for(int i=0; i<n; i++)
 		{
-			gnodes[i] = new Gnode(i, n);
+			gnodes[i] = new Gnode(i);
 		}
 		
 		for(Edge e: edges)
