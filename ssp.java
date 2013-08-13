@@ -1,7 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * This project uses Dijsktra's algorithm to compute the shortest paths
@@ -174,40 +176,41 @@ public class ssp
 			for(int j=0; j<n; j++)
 				distVec[i][j] = INFINITY;
 		
-		int counter, minIndex = 0;
+		int minIndex = 0;
 		double minDist;
+		Set<Gnode> V = new HashSet<Gnode>();	//sets of nodes, the shortest paths to those nodes are not yet found
 		
 		for(int source=0; source<n; source++)
 		{
 			distVec[source][source] = 0;
-			counter = 0;
 			
+			V.clear();
 			for(Gnode gnode : g)
-				gnode.setPathFound(false) ;
+			{
+				V.add(gnode);
+			}
 			
-			while(counter<n)		//find shortest path to n nodes
+			
+			while(!V.isEmpty())		//find shortest path to n nodes
 			{
 				minDist = Double.POSITIVE_INFINITY;
 				
-				for(Gnode gnode : g)	//find the node that has the shortest distance among all undetermined nodes
+				for(Gnode gnode : V)	//find the node that has the shortest distance among all undetermined nodes
 				{
-					if((!gnode.isPathFound()) && minDist > distVec[source][gnode.getIndex()])
+					if(minDist > distVec[source][gnode.getIndex()])
 					{
 						minDist = distVec[source][gnode.getIndex()];
 						minIndex = gnode.getIndex();
 					}
 				}
 				
-				g[minIndex].setPathFound(true);
-				counter ++;
+				V.remove(g[minIndex]);
 				
 				//the distance between the source and a neighbor of the new added node may be reduced
 				for(Adjnode an : g[minIndex].getAdjnodes())
 				{
 					if(distVec[source][an.getIndex()] > distVec[source][minIndex] + an.getDistance())
 						distVec[source][an.getIndex()] = distVec[source][minIndex] + an.getDistance();
-					//no need to consider the value of isPathFound, because those whose shortest paths have been
-					//decided always have a shorter distance than the current shortest path 
 				}	
 			}
 		}
@@ -228,16 +231,20 @@ public class ssp
 			for(int j=0; j<n; j++)
 				distVec[i][j] = INFINITY;
 		int minIndex = 0;
+		Set<Gnode> V = new HashSet<Gnode>();
 	
 		for(int source=0; source<n; source++)
 		{
 			distVec[source][source] = 0;
+			V.clear();
 			for(Gnode gnode : g)
-				gnode.setPathFound(false);
+			{
+				V.add(gnode);
+			}
 			
 			fheap.insert(source, 0);
 			
-			g[source].setPathFound(true);   //here pathFound denotes whether the node is inserted into the heap or not 
+			V.remove(g[source]);
 			
 			while(fheap.getMin() != null)
 			{
@@ -249,10 +256,10 @@ public class ssp
 					{
 						distVec[source][an.getIndex()] = distVec[source][minIndex] + an.getDistance();
 						//if the node has not been inserted to the heap, then insert it to the heap
-						if(g[an.getIndex()].isPathFound() == false)
+						if(V.contains(g[an.getIndex()]))
 						{
 							fheap.insert(an.getIndex(), distVec[source][an.getIndex()]);
-							g[an.getIndex()].setPathFound(true);
+							V.remove(g[an.getIndex()]);
 						}
 						
 						//if the node is already in the heap, find the corresponding heap node, and decrease the distance
@@ -279,14 +286,18 @@ public class ssp
 			for(int j=0; j<n; j++)
 				distVec[i][j] = INFINITY;
 		int minIndex = 0;
+		Set<Gnode> V = new HashSet<Gnode>();
+		
 		for(int source=0; source<n; source++)
 		{
 			distVec[source][source] = 0;
 			for(Gnode gnode : g)
-				gnode.setPathFound(false);
+			{
+				V.add(gnode);
+			}
 			
 			bheap.insert(source, 0);
-			g[source].setPathFound(true);   //here pathFound=true means this node is inserted into the heap 
+			V.remove(g[source]);
 			
 			while(bheap.getRoot() != null)
 			{
@@ -296,10 +307,10 @@ public class ssp
 					if(distVec[source][an.getIndex()] > distVec[source][minIndex] + an.getDistance())
 					{
 						distVec[source][an.getIndex()] = distVec[source][minIndex] + an.getDistance();
-						if(g[an.getIndex()].isPathFound() == false)
+						if(V.contains(g[an.getIndex()]))
 						{
 							bheap.insert(an.getIndex(), distVec[source][an.getIndex()]);
-							g[an.getIndex()].setPathFound(true);
+							V.remove(g[an.getIndex()]);
 						}
 						
 						else bheap.decreaseKey(bheap.searchNode(an.getIndex(), bheap.getRoot()), distVec[source][an.getIndex()]);
@@ -317,12 +328,16 @@ public class ssp
 	public static Edge[] inputEdges()
 	{
 		Scanner in = new Scanner(System.in);
-		String s , combination = "";
+		String s;
 		String[] temp, temp2;
+		StringBuffer buffer = new StringBuffer();
 		while(!(s = in.nextLine()).equals("*"))
 		{
-			combination += s + "/";
+			buffer.append(s);
+			buffer.append("/");
 		}
+		
+		String combination = buffer.toString();
 			
 		temp = combination.split("/");
 		Edge[] edges = new Edge[temp.length];
@@ -346,14 +361,16 @@ public class ssp
 	public static Edge[] loadEdges(String filename) throws FileNotFoundException
 	{
 		Scanner in = new Scanner(new File(filename));
-		String s , combination = "";
+		String s;
 		String[] temp, temp2;
+		StringBuffer buffer = new StringBuffer();
 		while(!(s = in.nextLine()).equals("*"))
 		{
-			combination += s + "/";
+			buffer.append(s);
+			buffer.append("/");
 		}
 		
-		System.out.println(combination);
+		String combination = buffer.toString();
 			
 		temp = combination.split("/");
 		Edge[] edges = new Edge[temp.length];
