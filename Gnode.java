@@ -10,7 +10,6 @@ public class Gnode
 	private int index;
 	private ArrayList<Adjnode> adjNodes;		//list of adjacent nodes
 	private int neighborNumber = 0;
-	private boolean isPathFound;
 	
 	public Gnode(int index)
 	{
@@ -46,15 +45,4 @@ public class Gnode
 	{
 		return neighborNumber;
 	}
-	
-	public void setPathFound(boolean b)
-	{
-		isPathFound = b;
-	}
-	
-	public boolean isPathFound()
-	{
-		return isPathFound;
-	}
-
 }
